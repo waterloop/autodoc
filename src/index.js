@@ -1,48 +1,101 @@
 import * as fs from 'fs';
+import * as path from 'path';
+
 import generateHtml from './html-generator.js';
 
 //READ FILE FUNCTION
 
-let fileContent = (path) => {
+function fileContent(path) {
+
   return fs.readFileSync(path, "utf8")
 
 }
 
-export default function getContent(path) {
+export function getContent(path) {
+
   return fileContent(path)
           .split('\n')
           .filter((paragraph) => !(paragraph.startsWith('//') || paragraph.startsWith('\r')))
           .map(paragraph => paragraph.replace('\r', ''))
-          // .filter(paragraph => !(paragraph.endsWith('});') || paragraph.endsWith('})')))
+
 }
 
-//for example testing in testing folder, output is:
+export function getFilePath(filePath) {
+  let newFilePath = path.resolve(filePath);
+  newFilePath = newFilePath.substring(newFilePath.indexOf("src"));
+  return newFilePath;
+}
 
-// [
-//   'describe("File Upload Routes", () => {',
-//   '  describe("POST /api/upload", () => {',
-//   "    it('should return a url to the image uploaded', async () => {",
-//   '      chai',
-//   '        .request(app)',
-//   "        .post('/api/upload', )",
-//   "        .set('Content-Type', 'multipart/form-data')",
-//   "        .attach('files', fs.readFileSync('/waterloop/src/tests/files/test.png'), 'test.png')",
-//   '        .end((err, res) => {',
-//   '          res.should.have.status(200);',
-//   "          expect(res.body).to.have.keys(['message', 'data']);",
-//   '          expect(res.body.data).to.have.lengthOf(1);',
-//   '          expect(res.body.data[0]).to.deep.equal(`/waterloop/tmp/test.png`);',
-//   '        });',
-//   '    });',
-//   '  })',
-//   '})',
-//   ''
-// ]
+export function parseParagraphs(paragraphs) {
+  // console.log(paragraphs);
+  //keep track of brackets beforehand, and the matching brackets (valid parentheses for square brackets)
+  let openArr = [];
+  let parsedParagraphs = [];
 
-//remove the )}?
+  let numIts = 0;
+  let numDescribes = 0;
+  try {
+    for (let i = 0; i < paragraphs.length; i++) {
 
-//what is the best way to parse this?
+      if (paragraphs[i].includes("describe(")) { //if describe is there, then it will take the descriptor after the index of 
+        numIts = 0; //reset numIts counter
 
-//we know that the first descriptor will be the main one at the top, but if there are multiple 
+        //if describe it will check length of openArr to see how many square brackets it's inside, if it's inside one, then that means that its a secondary descriptor
+        if (openArr.length == 0) {
 
-//could I determine it with 
+          numDescribes = 0; //numDescribes resets to 0 for new object in array to reset counter for secondaryDescriptors
+
+          parsedParagraphs.push({}); //will append a new object which will contain primaryDescriptor property, secondaryDescriptor property, etc.
+
+          parsedParagraphs[openArr.length].mainDescriptor = paragraphs[i].substring(paragraphs[i].indexOf("describe") + 10, paragraphs[i].lastIndexOf("'")) //appends the string to the mainDescriptor property
+
+        } else if (openArr.length > 0) {
+
+          numDescribes += 1; //numDescribes increases, this refers to the amount of secondaryDescriptors for each mainDescriptor
+
+          if (parsedParagraphs[openArr.length - 1]["secondaryDescriptors"]) {
+
+            parsedParagraphs[openArr.length - 1].secondaryDescriptors.push({ name: paragraphs[i].substring(paragraphs[i].indexOf("describe") + 10, paragraphs[i].lastIndexOf("'")) })
+
+          }
+          else {
+
+            parsedParagraphs[openArr.length - 1]["secondaryDescriptors"] = [{ name: paragraphs[i].substring(paragraphs[i].indexOf("describe") + 10, paragraphs[i].lastIndexOf("'")) }] //adds secondaryDescriptor property
+
+          }
+          //openArr keeps track of which primaryDescriptor/main test we're on.
+        }
+      }
+
+      else if (paragraphs[i].includes("it(")) {
+
+        numIts += 1; //need to be able to handle multiple it statements for each describe
+
+        if (parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1]["it"]) {
+
+          console.log(parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it)
+          parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it.push(paragraphs[i].substring(paragraphs[i].indexOf("it") + 4, paragraphs[i].lastIndexOf("'")))
+
+        } else {
+          parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1]["it"] = [paragraphs[i].substring(paragraphs[i].indexOf("it") + 4, paragraphs[i].lastIndexOf("'"))];
+        }
+
+      }
+
+      if (paragraphs[i].includes("{") && paragraphs[i].includes("}")) {
+
+      } else if (paragraphs[i].includes("{")) { //keeps track of square brackets to keep track of what are primary and secondary descriptors
+        openArr = [...openArr, "{"];
+      } else if (paragraphs[i].includes("}")) {
+        openArr.pop()
+      }
+
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  console.log(parsedParagraphs[0].secondaryDescriptors);
+  return parsedParagraphs;
+
+}
