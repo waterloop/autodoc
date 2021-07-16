@@ -2,10 +2,9 @@
   "name": "waterloop-autodoc",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha -r esm --reporter spec ./src/tests/*"
+    "test": "mocha -r esm --exit ./src/tests/*"
   },
   "repository": {
     "type": "git",
