@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import generateHtml from './html-generator.js';
+// const fs = require('fs');
+// const path = require('path');
 
 //READ FILE FUNCTION
 
@@ -11,7 +12,7 @@ function fileContent(path) {
 
 }
 
-export function getContent(path) {
+export function parseFileContent(path) {
 
   return fileContent(path)
           .split('\n')
@@ -73,7 +74,7 @@ export function parseParagraphs(paragraphs) {
 
         if (parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1]["it"]) {
 
-          console.log(parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it)
+          // console.log(parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it)
           parsedParagraphs[openArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it.push(paragraphs[i].substring(paragraphs[i].indexOf("it") + 4, paragraphs[i].lastIndexOf("'")))
 
         } else {
@@ -95,7 +96,12 @@ export function parseParagraphs(paragraphs) {
     console.log(err);
   }
 
-  console.log(parsedParagraphs[0].secondaryDescriptors);
+  // console.log(parsedParagraphs[0].secondaryDescriptors);
   return parsedParagraphs;
 
 }
+
+// module.exports.file_content = fileContent;
+// module.exports.parse_file_content = parseFileContent;
+// module.exports.get_file_path = getFilePath;
+// module.exports.parse_paragraphs = parseParagraphs;

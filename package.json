@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --require esm --reporter spec ./src/tests/*"
+    "test": "mocha -r esm --reporter spec ./src/tests/*"
   },
   "repository": {
     "type": "git",

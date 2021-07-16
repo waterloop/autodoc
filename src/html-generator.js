@@ -1,4 +1,12 @@
-import { getContent, getFilePath, parseParagraphs } from './index.js';
+import { parseFileContent, getFilePath, parseParagraphs } from './index.js';
+
+// module.exports.file_content = fileContent;
+// module.exports.parse_file_content = parseFileContent;
+// module.exports.get_file_path = getFilePath;
+// module.exports.parse_paragraphs = parseParagraphs;
+
+// let { file_content, parse_file_content, get_file_path, parse_paragraphs } = require('./index');
+
 
 export default function generateHtml(testDescriptors , path) {
 
@@ -26,7 +34,7 @@ For more information on this route, see: ${path}
   return html;
 }
 
-let content = getContent("./testing/geese-info.test.js");
+let content = parseFileContent("./testing/geese-info.test.js");
 
 let testDescriptors = parseParagraphs(content);
 
@@ -34,4 +42,4 @@ let filePath = getFilePath("./testing/geese-info.test.js");
 
 console.log(generateHtml(testDescriptors,filePath));
 
-
+// module.exports.generateHTML = generateHtml;
