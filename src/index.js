@@ -1,31 +1,57 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// const fs = require('fs');
-// const path = require('path');
 
-//READ FILE FUNCTION
+//--------------------- FUNCTIONS FOR READING ALL FILES ------------------------------------------------------------------------------=--------------------------------------------------=
 
-function fileContent(path) {
-
-  return fs.readFileSync(path, "utf8")
-
+function readFiles(dirname, onFileContent) { //figuring out how to access all the files in the directory
+  fs.readdir(dirname, (err, filenames) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    filenames.forEach((filename) => {
+      fs.readFile(dirname + filename, 'utf-8', (err, content) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        onFileContent(filename, content);
+      });
+    });
+  });
 }
+
+//---------------------------------------------------------------------------------------------------=--------------------------------------------------------------------------------=
+
+
+
+//--------------------- FUNCTIONS FOR READING SINGULAR FILES ------------------------------------------------------------------------------=--------------------------------------------------=
+
+function fileContent(pathName) {
+  return fs.readFileSync(path.join(__dirname, pathName), 'utf-8');
+
+} //will have to run this program inside the 
 
 export function parseFileContent(path) {
 
   return fileContent(path)
-          .split('\n')
-          .filter((paragraph) => !(paragraph.startsWith('//') || paragraph.startsWith('\r')))
-          .map(paragraph => paragraph.replace('\r', ''))
+    .split('\n')
+    .filter((paragraph) => !(paragraph.startsWith('//') || paragraph.startsWith('\r')))
+    .map(paragraph => paragraph.replace('\r', ''))
 
 }
 
 export function getFilePath(filePath) {
-  let newFilePath = path.resolve(filePath);
-  newFilePath = newFilePath.substring(newFilePath.indexOf("src"));
+  let newFilePath = path.resolve(filePath); //I really need to determine how this will function 
+
+  newFilePath = newFilePath.substring(newFilePath.indexOf("testing"), newFilePath.length).replace(/\\/g, '/');
+  // newFilePath = newFilePath.substring(newFilePath.indexOf("testing"),newFilePath.length).replace(/\\/g, '/'); //will need to determine what to show/what folder (most likely cms-backend?)
   return newFilePath;
 }
+
+//--------------------------------------------------=--------------------------------------------------=--------------------------------------------------=
+
 
 export function parseParagraphs(paragraphs) {
   // console.log(paragraphs);
@@ -96,12 +122,10 @@ export function parseParagraphs(paragraphs) {
     console.log(err);
   }
 
+  if (openArr.length != 0) { //if openArr.length is not 0, this means that it's reading a faulty test file
+    parsedParagraphs = []; //will reset it to 0
+  }
   // console.log(parsedParagraphs[0].secondaryDescriptors);
   return parsedParagraphs;
 
 }
-
-// module.exports.file_content = fileContent;
-// module.exports.parse_file_content = parseFileContent;
-// module.exports.get_file_path = getFilePath;
-// module.exports.parse_paragraphs = parseParagraphs;

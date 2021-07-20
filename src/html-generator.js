@@ -1,18 +1,20 @@
-import { parseFileContent, getFilePath, parseParagraphs } from './index.js';
-
-// module.exports.file_content = fileContent;
-// module.exports.parse_file_content = parseFileContent;
-// module.exports.get_file_path = getFilePath;
-// module.exports.parse_paragraphs = parseParagraphs;
-
-// let { file_content, parse_file_content, get_file_path, parse_paragraphs } = require('./index');
+// import { parseFileContent, getFilePath, parseParagraphs } from './index.js';
 
 
-export default function generateHtml(testDescriptors , path) {
+export function generateHtmlForTests(testDescriptors, pathToDir) { //testDescriptors will be an array of the objects
+//need to figure out what to do with this
+}
 
+export default function generateHtmlForTest(testDescriptors , path) { 
+  let html = ``;
   // console.log(testDescriptors);
+  if (testDescriptors.length == 0) {
 
-  let html =  //making html output with no indentations to make testing easier
+    console.log("Not a test file or empty file, returning empty pg")
+    return html;
+
+  } else {
+html =  //making html output with no indentations to make testing easier
 `<html>
 <body>
 <div>
@@ -25,21 +27,12 @@ ${secondaryDescriptors.it.map((itDescriptors) =>
           `<li>${`it ` + itDescriptors}</li>`).join('\n')}
 </ul>`).join('\n')}`)}
 <p>
-For more information on this route, see: ${path} 
+For more information on this route, see: ${path}
 </p>
 </div>
 </body>
 </html>`
+  }
 
   return html;
 }
-
-let content = parseFileContent("./testing/geese-info.test.js");
-
-let testDescriptors = parseParagraphs(content);
-
-let filePath = getFilePath("./testing/geese-info.test.js");
-
-console.log(generateHtml(testDescriptors,filePath));
-
-// module.exports.generateHTML = generateHtml;
