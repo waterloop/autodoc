@@ -4,29 +4,40 @@ import * as path from 'path';
 
 //--------------------- FUNCTIONS FOR READING ALL FILES ------------------------------------------------------------------------------=--------------------------------------------------=
 
-function readFiles(dirname, onFileContent) { //figuring out how to access all the files in the directory
-  fs.readdir(dirname, (err, filenames) => {
+export function readFiles(dirname) { //figuring out how to access all the files in the directorye
+  let descriptors = [];
+
+  let fileNames = fs.readdirSync(dirname, (err) => {
     if (err) {
       console.log(err);
       return;
     }
-    filenames.forEach((filename) => {
-      fs.readFile(dirname + filename, 'utf-8', (err, content) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        onFileContent(filename, content);
-      });
-    });
   });
+
+  fileNames.forEach((filename) => {
+    let fileContent = fs.readFileSync(dirname + filename, 'utf-8');
+
+    let content = fileContent.split('\n')
+
+    content = content.filter((paragraph) => !(paragraph.startsWith('//') || paragraph.startsWith('\r')))
+      .map(paragraph => paragraph.replace('\r', ''))
+
+    let parsedContent = parseParagraphs(content); //because parseParagraphs returns an array with an object inside, appending all objects inside to the descriptors to make it cleaner
+
+    for (let i = 0; i < parsedContent.length; i++) {
+      descriptors.push(parsedContent[i]);
+    }
+  })
+
+  return (descriptors);
+
 }
 
 //---------------------------------------------------------------------------------------------------=--------------------------------------------------------------------------------=
 
 
 
-//--------------------- FUNCTIONS FOR READING SINGULAR FILES ------------------------------------------------------------------------------=--------------------------------------------------=
+//--------------------- FUNCTIONS FOR READING SINGULAR FILES (Please note, that this no longer has any purpose, but this was a required building block to get everything to work)------------------------------------------------------------------------------=--------------------------------------------------=
 
 function fileContent(pathName) {
   return fs.readFileSync(path.join(__dirname, pathName), 'utf-8');
@@ -44,6 +55,8 @@ export function parseFileContent(path) {
 
 export function getFilePath(filePath) {
   let newFilePath = path.resolve(filePath); //I really need to determine how this will function 
+
+  //issue with resolve, it makes the path /autodocs/testing/..., it ignores the /src directory 
 
   newFilePath = newFilePath.substring(newFilePath.indexOf("testing"), newFilePath.length).replace(/\\/g, '/');
   // newFilePath = newFilePath.substring(newFilePath.indexOf("testing"),newFilePath.length).replace(/\\/g, '/'); //will need to determine what to show/what folder (most likely cms-backend?)
@@ -125,7 +138,7 @@ export function parseParagraphs(paragraphs) {
   if (openArr.length != 0) { //if openArr.length is not 0, this means that it's reading a faulty test file
     parsedParagraphs = []; //will reset it to 0
   }
-  // console.log(parsedParagraphs[0].secondaryDescriptors);
+
   return parsedParagraphs;
 
 }

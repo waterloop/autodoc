@@ -1,85 +1,8 @@
 import chai from 'chai';
-import generateHtmlForTest from '../html-generator.js';
-import { parseFileContent, getFilePath, parseParagraphs } from '../index';
-
+import generateHtmlForTest, { generateHtmlForTests } from '../html-generator.js';
+import { parseFileContent, getFilePath, parseParagraphs, readFiles } from '../index';
+import { expectedHTMLOutput } from './expectedOutputs/expected-output.js';
 var expect = chai.expect;
-
-let expectedHTMLOutput = {
-  matchShortTemplate:
-    `<html>
-<body>
-<div>
-<h1>Geese Info Routes</h1>
-<h2>GET /api/geese-info/</h2>
-<ul>
-<li>it should return a list of geese info when called</li>
-</ul>
-<p>
-For more information on this route, see: testing/geese-info.test.js
-</p>
-</div>
-</body>
-</html>`,
-
-  emptyTemplate: ``,
-
-  largeTemplate:
-    `<html>
-<body>
-<div>
-<h1>Geese Info Routes</h1>
-<h2>GET /api/geese-info/</h2>
-<ul>
-<li>it should return a list of geese info when called</li>
-</ul>
-<h2>GET /api/geese-info/:id</h2>
-<ul>
-<li>it should return a goose pod with specific ID when called</li>
-<li>it should return 404 for a non-existent pod when called</li>
-</ul>
-<h2>GET /api/geese-info/images/:id</h2>
-<ul>
-<li>it should return a list of images for a goose pod when called</li>
-<li>it should return 404 for a non-existent pod or a pod with no images when called</li>
-</ul>
-<h2>POST /api/geese-info/</h2>
-<ul>
-<li>it should add a goose pod to the db with a well formed input</li>
-<li>it should return 400 with no input supplied</li>
-<li>it should return 400 with some required inputs not provided</li>
-</ul>
-<h2>POST /api/geese-info/images</h2>
-<ul>
-<li>it should add geese pod images to the db with a well formed input</li>
-<li>it should return 400 with no input supplied</li>
-<li>it should return 400 with malformed inputs provided</li>
-</ul>
-<h2>PATCH /api/geese-info/:id</h2>
-<ul>
-<li>it should update the entry with "id" to match the new body</li>
-<li>it should return 400 if an id is not provided</li>
-<li>it should return 400 when body is missing</li>
-</ul>
-<h2>DELETE /api/geese-info/:id</h2>
-<ul>
-<li>it should delete a goose info entry with "id" that exists</li>
-<li>it should return 400 when an id is not provided</li>
-<li>it should return 404 if the id does not exist</li>
-</ul>
-<h2>DELETE /api/geese-info/images/:id</h2>
-<ul>
-<li>it should delete a goose image entry with "id" that exists</li>
-<li>it should return 400 when an id is not provided</li>
-<li>it should return 404 if the id does not exist</li>
-</ul>
-<p>
-For more information on this route, see: testing/largetest.test.js
-</p>
-</div>
-</body>
-</html>`
-}
-
 
 // import html generator
 describe("Html-Generator", () => {
@@ -107,8 +30,11 @@ describe("Html-Generator", () => {
 
   describe("Generating html for all test files in directory", () => {
     it("should parse all files in directory and put them in a singular html file", () => {
-      
-    })
+    let parseResults = readFiles('./src/testing/'); //they utilize relative file pathing, need to see what to do regarding the pre-commit hook
+    let filePath = getFilePath('./testing/largetest.test.js');
+    let html = generateHtmlForTests(parseResults, filePath);
+    expect(html).to.equal(expectedHTMLOutput.allFileTemplate);
+  })
   })
 })
 
