@@ -1,7 +1,7 @@
 import chai from 'chai';
 
 import generateHtmlForFile, { generateHtmlForFiles } from '../html-generator.js';
-import { parseFileContent, getFilePath, parseLinesOfCode, readFiles } from '../index.mjs';
+import { parseFileContent, getFilePath, parseLinesOfCode, readFiles } from '../utils';
 import { expectedHTMLOutput } from './expectedOutputs/expected-output';
 
 var expect = chai.expect;
