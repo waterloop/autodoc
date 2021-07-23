@@ -4,11 +4,6 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "npm run build && node ./build/index.js",
-    "start:dev": "nodemon --exec babel-node ./src/index.js",
-    "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./index.js -s",
-    "build": "npm run clean && npm run build-babel",
     "test": "mocha -r esm --exit ./src/tests/*"
   },
   "repository": {
