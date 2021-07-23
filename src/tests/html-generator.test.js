@@ -1,9 +1,9 @@
 import chai from 'chai';
-import * as fs from 'fs';
 
-import generateHtmlForTest, { generateHtmlForTests } from '../html-generator.js';
+import generateHtmlForFile, { generateHtmlForFiles } from '../html-generator.js';
 import { parseFileContent, getFilePath, parseLinesOfCode, readFiles } from '../index.mjs';
-import { expectedHTMLOutput } from './expectedOutputs/expected-output.js';
+import { expectedHTMLOutput } from './expectedOutputs/expected-output';
+
 var expect = chai.expect;
 
 // import html generator
@@ -12,20 +12,20 @@ describe("Html-Generator", () => {
     it("should match template", () => {
       let parseResults = parseLinesOfCode(parseFileContent("testing/geese-info.test.js"))
       let filePath = getFilePath('./testing/geese-info.test.js')
-      let html = generateHtmlForTest(parseResults, filePath)
+      let html = generateHtmlForFile(parseResults, filePath)
       // console.log(html);
       expect(html).to.equal(expectedHTMLOutput.matchShortTemplate);
     })
     it("should return empty nothing if test file is empty", () => {
       let parseResults = parseLinesOfCode(parseFileContent('/testing/empty.test.js'));
       let filePath = getFilePath('./testing/empty.test.js')
-      let html = generateHtmlForTest(parseResults, filePath)
+      let html = generateHtmlForFile(parseResults, filePath)
       expect(html).to.equal(expectedHTMLOutput.emptyTemplate);
     })
     it("should handle large test files", () => {
       let parseResults = parseLinesOfCode(parseFileContent('/testing/largetest.test.js'));
       let filePath = getFilePath('./testing/largetest.test.js')
-      let html = generateHtmlForTest(parseResults, filePath)
+      let html = generateHtmlForFile(parseResults, filePath)
       expect(html).to.equal(expectedHTMLOutput.largeTemplate);
     })
   })
@@ -34,15 +34,8 @@ describe("Html-Generator", () => {
     it("should parse all files in directory and put them in a singular html file", () => {
       let parseResults = readFiles('./src/testing/'); //they utilize relative file pathing, need to see what to do regarding the pre-commit hook
       let filePath = getFilePath('./testing/largetest.test.js');
-      let html = generateHtmlForTests(parseResults, filePath);
+      let html = generateHtmlForFiles(parseResults, filePath);
       expect(html).to.equal(expectedHTMLOutput.allFileTemplate);
     })
   })
 })
-
-
-//all this goes into a singular web page right? Need to handle dealing with multiple files in the testing directory and combining them into a singular large string
-
-//test for different testing files (empty files, specific edge cases)
-//node src/index.js /path/to/test/file/directory
-//

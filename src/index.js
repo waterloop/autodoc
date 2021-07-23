@@ -1,8 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
+// import { generateHtmlForFiles } from './html-generator'; //im gonna try out babel lmao
 
 //to preface, in order for this file to be called, it needs to be a module, and we cant use that in the .json because it causes issues with testing
 //with .mjs, __dirname does not work out of the box and I have to use the following code:
+//note: these imports are only relevant to the tests
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -13,8 +15,6 @@ const __dirname = path.dirname(__filename);
 export function readFiles(dirname) { //figuring out how to access all the files in the directorye
   let descriptors = [];
 
-  //dirname = path.resolve('./src/testing/') + '/'; //need to convert the relative path to the absolute path, but will the autodoc program be inthe actual codebase?
-
   let fileNames = fs.readdirSync(dirname, (err) => {
     if (err) {
       console.log(err);
@@ -23,7 +23,7 @@ export function readFiles(dirname) { //figuring out how to access all the files 
   });
 
   fileNames.forEach((filename) => {
-    let fileContent = fs.readFileSync(dirname + filename, 'utf-8');
+    let fileContent = fs.readFileSync(dirname + '/' + filename, 'utf-8');
 
     let content = fileContent.split('\n')
 
@@ -67,7 +67,6 @@ export function getFilePath(filePath) {
   //issue with resolve, it makes the path /autodocs/testing/..., it ignores the /src directory 
 
   newFilePath = newFilePath.substring(newFilePath.indexOf("testing"), newFilePath.length).replace(/\\/g, '/');
-  // newFilePath = newFilePath.substring(newFilePath.indexOf("testing"),newFilePath.length).replace(/\\/g, '/'); //will need to determine what to show/what folder (most likely cms-backend?)
   return newFilePath;
 }
 
@@ -124,7 +123,7 @@ export function parseLinesOfCode(linesOfCode) {
 
         if (parsedLinesOfCode[openBracketsArr.length - 2]["secondaryDescriptors"][numDescribes - 1]["it"]) {
 
-          // console.log(parsedLinesOfCode[openBracketsArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it)
+          //
           parsedLinesOfCode[openBracketsArr.length - 2]["secondaryDescriptors"][numDescribes - 1].it.push(linesOfCode[i].substring(linesOfCode[i].indexOf("it") + 4, linesOfCode[i].lastIndexOf("'")))
 
         } else {
@@ -154,9 +153,20 @@ export function parseLinesOfCode(linesOfCode) {
 
 }
 
-// function main() {
-//   console.log(process.argv);
-// }
 
+// console.log(process.argv); //gets the path that you put after the command
+// console.log(process.cwd());  //gets the current working directory where you call the command
 
-// main();
+function main() {
+  let pathName = path.join(process.cwd(), process.argv[2]);
+  // let pathToWriteTo = path.join(process.cwd(),'/autodoc');
+  // console.log(pathToWriteTo);
+
+  let content = readFiles(pathName);
+  console.log(content);
+  // console.log(generateHtmlForFiles(content));
+}
+
+main(); //note that this can't be open when we have tests, should I just have another file for this?
+
+//node --experimental-modules --es-module-specifier-resolution=node ./autodoc/src/index.mjs website/cms-server/src/tests/integration
