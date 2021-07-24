@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-// import { generateHtmlForFiles } from './html-generator'; //im gonna try out babel lmao
 
 //to preface, in order for this file to be called, it needs to be a module, and we cant use that in the .json because it causes issues with testing
 //with .mjs, __dirname does not work out of the box and I have to use the following code:
@@ -12,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 //--------------------- FUNCTIONS FOR READING ALL FILES ------------------------------------------------------------------------------=--------------------------------------------------=
 
-export function readFiles(dirname) { //figuring out how to access all the files in the directorye
+export function readFiles(dirname) {
   let descriptors = [];
 
   let fileNames = fs.readdirSync(dirname, (err) => {
@@ -62,9 +61,7 @@ export function parseFileContent(path) {
 }
 
 export function getFilePath(filePath) {
-  let newFilePath = path.resolve(filePath); //I really need to determine how this will function 
-
-  //issue with resolve, it makes the path /autodocs/testing/..., it ignores the /src directory 
+  let newFilePath = path.resolve(filePath);
 
   newFilePath = newFilePath.substring(newFilePath.indexOf("testing"), newFilePath.length).replace(/\\/g, '/');
   return newFilePath;
@@ -76,9 +73,9 @@ export function getFilePath(filePath) {
 //--------------------- ALGORITHM FOR PARSING TEST FILES ------------------------------------------------------------------------------=--------------------------------------------------=
 
 export function parseLinesOfCode(linesOfCode) {
-  // console.log(linesOfCode);
-  //keep track of brackets beforehand, and the matching brackets (valid parentheses for square brackets)
-  let openBracketsArr = []; //does this even need to be an array?
+  
+  let openBracketsArr = [];   //keep track of brackets beforehand, and the matching brackets (valid parentheses for square brackets)
+
   let parsedLinesOfCode = [];
 
   let numIts = 0;

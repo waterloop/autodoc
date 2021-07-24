@@ -3,19 +3,13 @@ import { generateHtmlForFiles } from "./html-generator";
 import * as path from 'path';
 import * as fs from 'fs';
 
-// console.log(process.argv); //gets the path that you put after the command
-// console.log(process.cwd());  //gets the current working directory where you call the command
-
 function main() {
   let pathName = path.join(process.cwd(), process.argv[2]);
-  // let pathToWriteTo = path.join(process.cwd(),'/autodoc');
-  // console.log(pathToWriteTo);
+
 
   let content = readFiles(pathName);
-  // console.log(content);
   
   let html = generateHtmlForFiles(content, pathName);
-  // console.log(html);
 
   if (!fs.existsSync('./autodocHTML')){
     fs.mkdirSync('./autodocHTML');
@@ -26,6 +20,7 @@ function main() {
 
 }
 
-main(); //note that this can't be open when we have tests, should I just have another file for this?
+main();
 
 //node --experimental-modules --es-module-specifier-resolution=node ./src/index.mjs src/testing
+//for refresher, check console.log(process.cwd()) and process.argv[2] to confirm that the these work, I need to check if these work on other computers 
