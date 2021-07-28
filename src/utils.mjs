@@ -63,7 +63,7 @@ export function parseFileContent(path) {
 export function getFilePath(filePath) {
   let newFilePath = path.resolve(filePath);
 
-  newFilePath = newFilePath.substring(newFilePath.indexOf("testing"), newFilePath.length).replace(/\\/g, '/');
+  newFilePath = newFilePath.substring(newFilePath.indexOf("src"), newFilePath.length).replace(/\\/g, '/');
   return newFilePath;
 }
 
@@ -73,7 +73,7 @@ export function getFilePath(filePath) {
 //--------------------- ALGORITHM FOR PARSING TEST FILES ------------------------------------------------------------------------------=--------------------------------------------------=
 
 export function parseLinesOfCode(linesOfCode) {
-  
+
   let openBracketsArr = [];   //keep track of brackets beforehand, and the matching brackets (valid parentheses for square brackets)
 
   let parsedLinesOfCode = [];

@@ -6,12 +6,11 @@ import * as fs from 'fs';
 function main() {
   let pathName = path.join(process.cwd(), process.argv[2]);
 
-
   let content = readFiles(pathName);
-  
+
   let html = generateHtmlForFiles(content, pathName);
 
-  if (!fs.existsSync('./autodocHTML')){
+  if (!fs.existsSync('./autodocHTML')) {
     fs.mkdirSync('./autodocHTML');
   }
 

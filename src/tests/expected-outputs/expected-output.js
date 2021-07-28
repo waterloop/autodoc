@@ -9,7 +9,7 @@ matchShortTemplate:
 <li>it should return a list of geese info when called</li>
 </ul>
 <p>
-For more information on this route, see: testing/geese-info.test.js
+For more information on this route, see: src/tests/files-for-tests/geese-info.test.js
 </p>
 </div>
 </body>
@@ -67,7 +67,7 @@ largeTemplate:
 <li>it should return 404 if the id does not exist</li>
 </ul>
 <p>
-For more information on this route, see: testing/largetest.test.js
+For more information on this route, see: src/tests/files-for-tests/largetest.test.js
 </p>
 </div>
 </body>
@@ -128,7 +128,7 @@ allFileTemplate:
 <li>it should return 404 if the id does not exist</li>
 </ul></div>
 <p>
-For more information on this route, see: testing/largetest.test.js
+For more information on this route, see: src/tests/files-for-tests
 </p>
 </div>
 </body>

@@ -6,9 +6,6 @@ import { expectedHTMLOutput } from './expected-outputs/expected-output';
 
 var expect = chai.expect;
 
-//TO FIX: TESTS AS THEY WILL FAIL AS ALL OTHER COMPUTERS HAVE DIFFERENT FILE PATHS TO THIS 
-
-// import html generator
 describe("Html-Generator", () => {
   describe("Generating for singular test files", () => {
     it("should match template", () => {
@@ -34,8 +31,8 @@ describe("Html-Generator", () => {
 
   describe("Generating html for all test files in directory", () => {
     it("should parse all files in directory and put them in a singular html file", () => {
-      let parseResults = readFiles('./src/tests/files-for-tests/'); //they utilize relative file pathing, need to see what to do regarding the pre-commit hook
-      let filePath = getFilePath('./src/tests/files-for-tests/largetest.test.js');
+      let parseResults = readFiles('./src/tests/files-for-tests/'); 
+      let filePath = getFilePath('./src/tests/files-for-tests'); 
       let html = generateHtmlForFiles(parseResults, filePath);
       expect(html).to.equal(expectedHTMLOutput.allFileTemplate);
     })

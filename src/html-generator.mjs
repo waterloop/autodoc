@@ -2,12 +2,9 @@ export default function generateHtmlForFile(testDescriptors , path) {
   let html = ``;
   // console.log(testDescriptors);
   if (testDescriptors.length == 0) {
-
-    // console.log("Not a test file or empty file, returning empty pg")
     return html;
-
   } else {
-html =  //making html output with no indentations to make testing easier
+html =
 `<html>
 <body>
 <div>
@@ -30,14 +27,12 @@ For more information on this route, see: ${path}
   return html;
 }
 
-export function generateHtmlForFiles(testDescriptors, pathToDir) { //testDescriptors will be an array of the objects
-//need to figure out what to do with this
+export function generateHtmlForFiles(testDescriptors, pathToDir) {
   let html = ``;
 
-  const lengthofDescriptors = testDescriptors.reduce((a, obj) => a + Object.keys(obj).length, 0); //cant use .length because its an array of objects so .length is undefined for this situation
+  const lengthofDescriptors = testDescriptors.reduce((a, obj) => a + Object.keys(obj).length, 0); 
   if (lengthofDescriptors == 0) {
 
-    // console.log("Directory is empty");
     return html;
   } else {
 html =  //making html output with no indentations to make testing easier
