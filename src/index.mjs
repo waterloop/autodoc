@@ -22,4 +22,4 @@ function main() {
 main();
 
 //node --experimental-modules --es-module-specifier-resolution=node ./src/index.mjs src/testing
-//for refresher, check console.log(process.cwd()) and process.argv[2] to confirm that the these work, I need to check if these work on other computers 
+//for refresher, check console.log(process.cwd()) and process.argv[2] 

@@ -5,6 +5,8 @@ Autodocs is a program that parses the test files in a directory and creates a si
 
 ## USAGE
 
+Use Node 12, does not work with latest versions of Node.
+
 Run autodoc script with the commands 
 
 ```bash
