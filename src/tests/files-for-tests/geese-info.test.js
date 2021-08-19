@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const should = chai.should();
 
-describe('Geese Info Routes', () => {
+describe('Shorter Geese Info Routes', () => {
 // Rollback migrations.
   beforeEach('reseed', async function () {
     this.timeout(60 * 1000); // Resetting the DB can take a few seconds

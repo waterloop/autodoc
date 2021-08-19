@@ -1,46 +1,40 @@
 import chai from 'chai';
-import { generateHtml } from '../html-generator';
-import { getFilePath } from '../index';
+
+import generateHtmlForFile, { generateHtmlForFiles } from '../html-generator.mjs';
+import { parseFileContent, getFilePath, parseLinesOfCode, readFiles } from '../utils.mjs';
+import { expectedHTMLOutput } from './expected-outputs/expected-output';
 
 var expect = chai.expect;
 
-let expectedTestDescriptors = 
-[
-  {
-    mainDescriptor: 'Geese Info Routes',
-    secondaryDescriptors: [{name: 'GET /api/geese-info/', it: ['should return a list of geese info when called']}],
-  }
-]
-
-
-let expectedHTMLOutput = 
-`
-<html>
-<body>
-<div>
-<h1>Geese Info Routes</h1>
-<h2>GET /api/geese-info/</h2>
-<ul>
-<li>it should return a list of geese info when called</li>
-</ul>
-<p>
-For more information on this route, see: src\testing\geese-info.test.js
-</p>
-</div>
-</body>
-</html>`
-
-// import html generator
-describe("Html-Generator", function () {
-  describe("async api", function () {
+describe("Html-Generator", () => {
+  describe("Generating for singular test files", () => {
     it("should match template", () => {
-      let parseResults = expectedTestDescriptors;
-      let filePath = getFilePath('./testing/geese-info.test.js')
-      let html = generateHtml(parseResults, filePath)
-      expect(html).to.equal(expectedHTMLOutput);
+      let parseResults = parseLinesOfCode(parseFileContent("tests/files-for-tests/geese-info.test.js"))
+      let filePath = getFilePath('./src/tests/files-for-tests/geese-info.test.js')
+      let html = generateHtmlForFile(parseResults, filePath)
+      // console.log(html);
+      expect(html).to.equal(expectedHTMLOutput.matchShortTemplate);
+    })
+    it("should return empty nothing if test file is empty", () => {
+      let parseResults = parseLinesOfCode(parseFileContent('tests/files-for-tests/empty.test.js'));
+      let filePath = getFilePath('./src/tests/files-for-tests/empty.test.js')
+      let html = generateHtmlForFile(parseResults, filePath)
+      expect(html).to.equal(expectedHTMLOutput.emptyTemplate);
+    })
+    it("should handle large test files", () => {
+      let parseResults = parseLinesOfCode(parseFileContent('tests/files-for-tests/largetest.test.js'));
+      let filePath = getFilePath('./src/tests/files-for-tests/largetest.test.js')
+      let html = generateHtmlForFile(parseResults, filePath)
+      expect(html).to.equal(expectedHTMLOutput.largeTemplate);
     })
   })
 
+  describe("Generating html for all test files in directory", () => {
+    it("should parse all files in directory and put them in a singular html file", () => {
+      let parseResults = readFiles('./src/tests/files-for-tests/'); 
+      let filePath = getFilePath('./src/tests/files-for-tests'); 
+      let html = generateHtmlForFiles(parseResults, filePath);
+      expect(html).to.equal(expectedHTMLOutput.allFileTemplate);
+    })
+  })
 })
-
-
